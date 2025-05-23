@@ -1,0 +1,19 @@
+# Ignore environment files containing credentials and secrets
+.env
+*.env
+
+# Ignore Go build artifacts
+/bin/
+/build/
+/dist/
+*.exe
+*.out
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
+*.swp
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
