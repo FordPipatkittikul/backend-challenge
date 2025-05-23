@@ -1,103 +1,66 @@
-# Backend Golang Coding Test
+# Golang User API
 
-## Objective
-Build a simple RESTful API in Golang that manages a list of users. Use MongoDB for persistence, JWT for authentication, and follow clean code practices.
+This is a RESTful API built in Go that manages users, using MongoDB for storage and JWT for authentication.
 
----
+## Features
+- User registration, login, CRUD
+- JWT authentication (HS256)
+- MongoDB integration
+- Logging middleware
+- Background goroutine to count users
+- Clean architecture
 
-## Requirements
+## Setup
 
-### 1. User Model
-Each user should have:
-- `ID` (auto-generated)
-- `Name` (string)
-- `Email` (string, unique)
-- `Password` (hashed)
-- `CreatedAt` (timestamp)
+### Prerequisites
+- Go 1.20+
+- MongoDB (local or Docker)
 
----
+### Run MongoDB (optional)
+```sh
+docker run -d -p 27017:27017 --name mongo mongo
+```
 
-### 2. Authentication
+### Clone and Run
+```sh
+git clone https://github.com/your-username/user-api.git
+cd user-api
+go mod tidy
+go run ./cmd
+```
 
-#### Functions
-- Register a new user.
-- Authenticate user and return a JWT.
+### Environment Variables
+| Variable         | Default Value        |
+|------------------|----------------------|
+| `MONGO_URI`      | mongodb://localhost:27017 |
+| `MONGO_DB`       | userdb               |
+| `MONGO_COLLECTION`| users               |
+| `JWT_SECRET`     | supersecretkey       |
 
-#### JWT
-- Use JWT for protecting endpoints.
-- Use middleware to validate tokens.
-- Use HMAC (HS256) with a secret key.
+### Sample API
 
----
+**Register:**
+```
+POST /register
+{
+  "name": "John",
+  "email": "john@example.com",
+  "password": "pass123"
+}
+```
 
-### 3. User Functions
+**Login:**
+```
+POST /login
+{
+  "email": "john@example.com",
+  "password": "pass123"
+}
+Response: { "token": "<JWT>" }
+```
 
-- Create a new user.
-- Fetch user by ID.
-- List all users.
-- Update a user's name or email.
-- Delete a user.
-
----
-
-### 4. MongoDB Integration
-- Use the official Go MongoDB driver.
-- Store and retrieve users from MongoDB.
-
----
-
-### 5. Middleware
-- Logging middleware that logs HTTP method, path, and execution time.
-
----
-
-### 6. Concurrency Task
-- Run a background goroutine every 10 seconds that logs the number of users in the DB.
-
----
-
-### 7. Testing
-Write unit tests
-
-Use Go’s `testing` package. Mock MongoDB where possible.
-
----
-
-## Bonus (Optional)
-
-- Add Docker + `docker-compose` for API + MongoDB.
-- Use Go interfaces to abstract MongoDB operations for testability.
-- Add input validation (e.g., required fields, valid email).
-- Implement graceful shutdown using `context.Context`.
-- **gRPC Version**
-  - Create a `.proto` file for `CreateUser` and `GetUser`.
-  - Implement a gRPC server.
-  - (Optional) Secure gRPC with token metadata.
-- **Hexagonal Architecture**
-  - Structure the project using hexagonal (ports & adapters) architecture:
-    - Separate domain, application, and infrastructure layers.
-    - Use interfaces for data access and external dependencies.
-    - Keep business logic decoupled from frameworks and DB drivers.
-
----
-
-## Submission Guidelines
-
-- Submit a GitHub repo or zip file.
-- Include a `README.md` with:
-  - Project setup and run instructions
-  - JWT token usage guide
-  - Sample API requests/responses
-  - Any assumptions or decisions made
-
----
-
-## Evaluation Criteria
-
-- Code quality, structure, and readability
-- REST API correctness and completeness
-- JWT implementation and security
-- MongoDB usage and abstraction
-- Bonus: gRPC, Docker, validation, shutdown
-- Testing coverage and mocking
-- Use of idiomatic Go
+**Protected Route:**
+```
+GET /users
+Headers: Authorization: Bearer <JWT>
+```
